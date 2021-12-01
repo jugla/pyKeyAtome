@@ -1,6 +1,6 @@
 # Atome PyPi
 
-[![Build Status](https://travis-ci.org/BaQs/pyAtome.svg?branch=master)](https://travis-ci.org/BaQs/pyAtome)
+[![Build Status](https://travis-ci.org/BaQs/pyAtome.svg?branch=master)](https://travis-ci.org/jugla/pyKeyAtome)
 
 Get your energy consumption data from Atome, a Linky-compatible device made by Total/Direct-Energie.
 
@@ -37,7 +37,7 @@ Any contribution is welcome, considering the number of features the API provides
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/baqs/pyAtome/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/jugla/pyKeyAtome/tags). 
 
 ## Authors
 
@@ -48,12 +48,8 @@ This project is licensed under the ASL 2.0 License - see the [LICENSE.md](LICENS
 ## Acknowledgments
 
 * Thanks to k20human for the original inspiration with https://github.com/k20human/domoticz-atome
+* This project is a for of https://github.com/BaQs/pyAtome (seems to be unmaintained)
 
 ## Changelog
 
-### 0.1.x
-- Better tests
-- Added consumption feature
-
-### 0.0.x
-First versions, providing live data only
+### 1.0.0 first release
