@@ -1,15 +1,8 @@
 import json
 import simplejson
-# import pickle
-# from dateutil.relativedelta import relativedelta
 import requests
 import logging
 from fake_useragent import UserAgent
-
-# ATOME_COOKIE = "atome_cookies.pickle"
-# ATOME_USER_ID = "atome_user_id.pickle"
-# ATOME_USER_REFERENCE = "atome_user_reference.pickle"
-
 
 COOKIE_NAME = "PHPSESSID"
 API_BASE_URI = "https://esoftlink.esoftthings.com"
@@ -21,39 +14,14 @@ LOGIN_URL = API_BASE_URI + API_ENDPOINT_LOGIN
 DEFAULT_TIMEOUT = 10
 MAX_RETRIES = 3
 
-PERIODS_MAP = {
-    'day'
-}
-
-# LOGIN_URL = "https://espace-client-connexion.enedis.fr/auth/UI/Login"
-# HOST = "https://espace-client-particuliers.enedis.fr/group/espace-particuliers"
-# DATA_URL = "{}/suivi-de-consommation".format(HOST)
-
-# REQ_PART = "lincspartdisplaycdc_WAR_lincspartcdcportlet"
-
-# HOURLY = "hourly"
-# DAILY = "daily"
-# MONTHLY = "monthly"
-# YEARLY = "yearly"
-
-
-# _DELTA = 'delta'
-# _FORMAT = 'format'
-# _RESSOURCE = 'ressource'
-# _DURATION = 'duration'
-# _MAP = {
-#     _DELTA: {HOURLY: 'hours', DAILY: 'days', MONTHLY: 'months', YEARLY: 'years'},
-#     _FORMAT: {HOURLY: "%H:%M", DAILY: "%d %b", MONTHLY: "%b", YEARLY: "%Y"},
-#     _RESSOURCE: {HOURLY: 'urlCdcHeure', DAILY: 'urlCdcJour', MONTHLY: 'urlCdcMois', YEARLY: 'urlCdcAn'},
-#     _DURATION: {HOURLY: 24, DAILY: 30, MONTHLY: 12, YEARLY: None}
-# }
-
 
 class PyAtomeError(Exception):
+    """Exception class"""
     pass
 
 
 class AtomeClient(object):
+    """The client class"""
     def __init__(self, username, password, session=None, timeout=None):
         """Initialize the client object."""
         self.username = username
@@ -84,9 +52,6 @@ class AtomeClient(object):
         except OSError:
             raise PyAtomeError("Can not login to API")
 
-        #if 'PHPSESSID' not in req.cookies:
-        #    raise PyAtomeError("Login error: Please check your username/password: %s ", str(req.text))
-
         try:
             response_json = req.json()
 
@@ -96,7 +61,6 @@ class AtomeClient(object):
             self._user_id = user_id
             self._user_reference = user_reference
         except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
-        # except (OSError, json.decoder.JSONDecodeError) as e:
             raise PyAtomeError("Impossible to decode response: \nResponse was: [%s] %s", str(e), str(req.status_code), str(req.text))
 
         return True
@@ -123,7 +87,7 @@ class AtomeClient(object):
             raise PyAtomeError("Could not access Atome's API: " + str(e))
 
         if req.status_code == 403:
-        # session is wrong, need to relogin
+            # session is wrong, need to relogin
             self.login()
             logging.info("Got 403, relogging (max retries: %s)",str(max_retries))
             return self._get_live(max_retries+1)
@@ -134,7 +98,6 @@ class AtomeClient(object):
         try:
             json_output = req.json()
         except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
-        # except (OSError, json.decoder.JSONDecodeError) as e:
             raise PyAtomeError("Impossible to decode response: " + str(e) + "\nResponse was: " + str(req.text))
 
         return json_output
@@ -166,7 +129,7 @@ class AtomeClient(object):
             raise PyAtomeError("Could not access Atome's API: " + str(e))
 
         if req.status_code == 403:
-        # session is wrong, need to relogin
+            # session is wrong, need to relogin
             self.login()
             logging.info("Got 403, relogging (max retries: %s)",str(max_retries))
             return self._get_consumption(max_retries+1)
@@ -176,7 +139,6 @@ class AtomeClient(object):
 
         try:
             json_output = req.json()
-        # except (OSError, json.decoder.JSONDecodeError) as e:
         except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
             raise PyAtomeError("Impossible to decode response: " + str(e) + "\nResponse was: " + str(req.text))
 
