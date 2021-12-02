@@ -20,13 +20,13 @@ def main():
         type=str,
         default="live",
         help="Action",
-        choices=["live","consumption"],
+        choices=["live", "consumption"],
     )
     parser.add_argument(
         "--period",
         required=False,
         help="Period (only used with Action=consumption)",
-        choices=["day","week","month","year"],
+        choices=["day", "week", "month", "year"],
     )
     args = parser.parse_args()
 
@@ -39,8 +39,6 @@ def main():
         requests_log = logging.getLogger("requests.packages.urllib3")
         requests_log.setLevel(logging.DEBUG)
         requests_log.propagate = True
-
-
 
     if args.action == "live":
         try:
@@ -70,6 +68,7 @@ def main():
         print(
             "Usage : __main__ -u username -p pwd [--debug] [live|consumption [day|week|month|year]]"
         )
+
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -2,8 +2,8 @@
 import json
 import logging
 
-import simplejson
 import requests
+import simplejson
 from fake_useragent import UserAgent
 
 COOKIE_NAME = "PHPSESSID"
@@ -25,6 +25,7 @@ class PyAtomeError(Exception):
 
 class AtomeClient(object):
     """The client class."""
+
     def __init__(self, username, password, session=None, timeout=None):
         """Initialize the client object."""
         self.username = username
@@ -53,7 +54,7 @@ class AtomeClient(object):
                 json=payload,
                 headers={"content-type": "application/json"},
                 timeout=self._timeout,
-        )
+            )
         except OSError:
             raise PyAtomeError("Can not login to API")
 
@@ -65,12 +66,16 @@ class AtomeClient(object):
 
             self._user_id = user_id
             self._user_reference = user_reference
-        except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
+        except (
+            OSError,
+            json.decoder.JSONDecodeError,
+            simplejson.errors.JSONDecodeError
+        ) as e:
             raise PyAtomeError(
                 "Impossible to decode response: \nResponse was: [%s] %s",
                 str(e),
                 str(req.status_code),
-                str(req.text)
+                str(req.text),
             )
 
         return True
@@ -90,8 +95,7 @@ class AtomeClient(object):
             + API_ENDPOINT_LIVE
         )
         try:
-            req = self._session.get(live_url,
-                                    timeout=self._timeout)
+            req = self._session.get(live_url, timeout=self._timeout)
 
         except OSError as e:
             raise PyAtomeError("Could not access Atome's API: " + str(e))
@@ -100,7 +104,60 @@ class AtomeClient(object):
             # session is wrong, need to relogin
             self.login()
             logging.info("Got 403, relogging (max retries: %s)", str(max_retries))
-            return self._get_live(max_retries+1)
+            return self._get_live(max_retries + 1)
+
+        if req.text == "":
+            raise PyAtomeError("No data")
+
+        try:
+            json_output = req.json()
+        except (
+            OSError,
+            json.decoder.JSONDecodeError,
+            simplejson.errors.JSONDecodeError,
+        ) as e:
+            raise PyAtomeError(
+                "Impossible to decode response: "
+                + str(e)
+                + "\nResponse was: "
+                + str(req.text)
+            )
+
+        return json_output
+
+    def _get_consumption(self, period, max_retries=0):
+        """Get consumption according to period."""
+        """ Period can be: day, week, month, year"""
+        if period not in ["day", "week", "month", "year"]:
+            raise ValueError(
+                "Period %s out of range. Shall be either 'day', 'week', 'month' or 'year'.",
+                str(period),
+            )
+
+        if max_retries > MAX_RETRIES:
+            raise PyAtomeError("Can't gather proper data. Max retries exceeded.")
+
+        consumption_url = (
+            API_BASE_URI
+            + "/api/subscription/"
+            + self._user_id
+            + "/"
+            + self._user_reference
+            + API_ENDPOINT_CONSUMPTION
+            + "?period=so"
+            + period[:1]
+        )
+        try:
+            req = self._session.get(consumption_url, timeout=self._timeout)
+
+        except OSError as e:
+            raise PyAtomeError("Could not access Atome's API: " + str(e))
+
+        if req.status_code == 403:
+            # session is wrong, need to relogin
+            self.login()
+            logging.info("Got 403, relogging (max retries: %s)", str(max_retries))
+            return self._get_consumption(max_retries + 1)
 
         if req.text == "":
             raise PyAtomeError("No data")
@@ -121,57 +178,11 @@ class AtomeClient(object):
 
         return json_output
 
-    def _get_consumption(self, period, max_retries=0):
-        """Get consumption according to period."""
-        """ Period can be: day, week, month, year"""
-        if period not in ["day", "week", "month", "year"]:
-            raise ValueError("Period %s out of range. Shall be either 'day', 'week', 'month' or 'year'." , str(period))
-
-        if max_retries > MAX_RETRIES:
-            raise PyAtomeError("Can't gather proper data. Max retries exceeded.")
-
-        consumption_url = (
-            API_BASE_URI
-            + "/api/subscription/"
-            + self._user_id
-            + "/"
-            + self._user_reference
-            + API_ENDPOINT_CONSUMPTION
-            + '?period=so'
-            + period[:1]
-        )
-        try:
-            req = self._session.get(consumption_url, timeout=self._timeout)
-
-        except OSError as e:
-            raise PyAtomeError("Could not access Atome's API: " + str(e))
-
-        if req.status_code == 403:
-            # session is wrong, need to relogin
-            self.login()
-            logging.info("Got 403, relogging (max retries: %s)",str(max_retries))
-            return self._get_consumption(max_retries+1)
-
-        if req.text == "":
-            raise PyAtomeError("No data")
-
-        try:
-            json_output = req.json()
-        except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
-            raise PyAtomeError(
-                "Impossible to decode response: "
-                + str(e)
-                + "\nResponse was: "
-                + str(req.text)
-            )
-
-        return json_output
-
     def get_live(self):
         """Get current data."""
         return self._get_live()
 
-    def get_consumption(self,period):
+    def get_consumption(self, period):
         """Get current data."""
         return self._get_consumption(period)
 
