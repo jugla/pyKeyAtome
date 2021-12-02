@@ -12,7 +12,7 @@ import requests
 from pykeyatome import AtomeClient
 from pykeyatome.client import (
     API_BASE_URI,
-    API_ENDPOINT_CONSUMPTION
+    API_ENDPOINT_CONSUMPTION,
     API_ENDPOINT_LIVE,
     LOGIN_URL,
 )
