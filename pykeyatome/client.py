@@ -69,7 +69,7 @@ class AtomeClient(object):
         except (
             OSError,
             json.decoder.JSONDecodeError,
-            simplejson.errors.JSONDecodeError
+            simplejson.errors.JSONDecodeError,
         ) as e:
             raise PyAtomeError(
                 "Impossible to decode response: \nResponse was: [%s] %s",
@@ -167,7 +167,7 @@ class AtomeClient(object):
         except (
             OSError,
             json.decoder.JSONDecodeError,
-            simplejson.errors.JSONDecodeError
+            simplejson.errors.JSONDecodeError,
         ) as e:
             raise PyAtomeError(
                 "Impossible to decode response: "
