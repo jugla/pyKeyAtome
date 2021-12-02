@@ -4,7 +4,7 @@ import json
 import logging
 import sys
 
-from pykeyatome import AtomeClient
+from pykeyatome.client import AtomeClient
 
 
 def main():
