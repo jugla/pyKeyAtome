@@ -34,7 +34,7 @@ Any contribution is welcome, considering the number of features the API provides
 ## Acknowledgments
 
 * Thanks to k20human for the original inspiration with https://github.com/k20human/domoticz-atome
-* This project is a for of https://github.com/BaQs/pyAtome (seems to be unmaintained)
+* This project is a fork of https://github.com/BaQs/pyAtome (seems to be unmaintained)
 
 ## Changelog
 
