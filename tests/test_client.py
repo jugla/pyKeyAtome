@@ -1,9 +1,10 @@
-import unittest
+# The class used
+import json
+import logging
+import os
 import requests_mock
 import responses
-import logging
-import json
-import os
+import unittest
 import sys
 
 # Our test case class
@@ -53,19 +54,19 @@ class AtomeClientTestCase(unittest.TestCase):
 
     @requests_mock.Mocker()
     def test_login(self, m):
-        cookies = {'PHPSESSID': 'TEST'}
+        cookies = {"PHPSESSID": "TEST"}
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-        with open(os.path.join(__location__, 'data/login.json'), 'r') as f:
+        with open(os.path.join(__location__, "data/login.json"), "r") as f:
             answer = json.load(f)
 
         m.post(LOGIN_URL, status_code=200, cookies=cookies, text=json.dumps(answer))
         client = AtomeClient("test_login", "test_password")
         client.login()
-        
+
         logging.debug(client)
-        
-        assert client._user_id          == '12345'
-        assert client._user_reference   == '101234567'
+
+        assert client._user_id          == "12345"
+        assert client._user_reference   == "101234567"
 
         return client
 
@@ -74,7 +75,9 @@ class AtomeClientTestCase(unittest.TestCase):
 
         client = self.test_login()
 
-        __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        __location__ = os.path.realpath(
+            os.path.join(os.getcwd(), os.path.dirname(__file__))
+        )
         with open(os.path.join(__location__, 'data/live.json'), 'r') as f:
             answer = json.load(f)
 
@@ -85,12 +88,12 @@ class AtomeClientTestCase(unittest.TestCase):
             + "/"
             + client._user_reference
             + API_ENDPOINT_LIVE
-            )
+        )
 
         m.get(live_url, status_code=200, text=json.dumps(answer))
         liveData = client.get_live()
         logging.debug(liveData)
-        assert liveData['last'] == 2289
+        assert liveData["last"] == 2289
 
     @requests_mock.Mocker()
     def test_relog_after_session_down(self, m):
@@ -103,7 +106,9 @@ class AtomeClientTestCase(unittest.TestCase):
         # with open(os.path.join(__location__, 'live.json'), 'r') as f:
         #     live_answer = json.load(f)
 
-        __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        __location__ = os.path.realpath(
+            os.path.join(os.getcwd(), os.path.dirname(__file__))
+        )
         with open(os.path.join(__location__, 'data/login.json'), 'r') as f:
             login_answer = json.load(f)
 
@@ -116,11 +121,17 @@ class AtomeClientTestCase(unittest.TestCase):
             + API_ENDPOINT_LIVE
             )
 
-        m.post(LOGIN_URL, status_code=200, cookies={'PHPSESSID': 'TEST'}, text=json.dumps(login_answer))
+        m.post(
+            LOGIN_URL,
+            status_code=200,
+            cookies={"PHPSESSID": "TEST"},
+            text=json.dumps(login_answer),
+        )
         m.get(live_url, text="Wrong session", status_code=403)
 
         # shall generate an exception
-        with self.assertRaises(Exception): client.get_live()
+        with self.assertRaises(Exception):
+            client.get_live()
 
     @requests_mock.Mocker()
     def test_consumption(self, m):
