@@ -2,11 +2,12 @@
 import json
 import logging
 import os
+import unittest
+import sys
+
 import requests
 import requests_mock
 import responses
-import unittest
-import sys
 
 # Our test case class
 from pykeyatome import AtomeClient
@@ -19,6 +20,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 requests_log = logging.getLogger("requests.packages.urllib3")
 requests_log.setLevel(logging.DEBUG)
 requests_log.propagate = True
+
 
 class PyAtomeError(Exception):
     pass
@@ -141,7 +143,9 @@ class AtomeClientTestCase(unittest.TestCase):
 
         client = self.test_login()
 
-        __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        __location__ = os.path.realpath(
+            os.path.join(os.getcwd(), os.path.dirname(__file__))
+        )
         with open(os.path.join(__location__, "data/consumption_sod.json"), "r") as f:
             consumption_sod = json.load(f)
         with open(os.path.join(__location__, "data/consumption_sow.json"), "r") as f:
@@ -178,8 +182,6 @@ class AtomeClientTestCase(unittest.TestCase):
         assert liveData["total"] == 3650
 
     # TODO: test get_consumption with proper period, or with unproper period
-
-
 
     def test(self):
         data = None
