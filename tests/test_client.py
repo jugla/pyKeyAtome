@@ -2,20 +2,16 @@
 import json
 import logging
 import os
+import requests
 import requests_mock
 import responses
 import unittest
 import sys
 
 # Our test case class
-import requests
 from pykeyatome import AtomeClient
-from pykeyatome.client import (
-    API_BASE_URI,
-    API_ENDPOINT_CONSUMPTION,
-    API_ENDPOINT_LIVE,
-    LOGIN_URL,
-)
+from pykeyatome.client import (API_BASE_URI, API_ENDPOINT_CONSUMPTION,
+                               API_ENDPOINT_LIVE, LOGIN_URL)
 
 # You must initialize logging, otherwise you'll not see debug output.
 logging.basicConfig()
@@ -72,8 +68,8 @@ class AtomeClientTestCase(unittest.TestCase):
 
         logging.debug(client)
 
-        assert client._user_id          == "12345"
-        assert client._user_reference   == "101234567"
+        assert client._user_id == "12345"
+        assert client._user_reference == "101234567"
 
         return client
 
@@ -126,7 +122,7 @@ class AtomeClientTestCase(unittest.TestCase):
             + "/"
             + client._user_reference
             + API_ENDPOINT_LIVE
-            )
+        )
 
         m.post(
             LOGIN_URL,
@@ -162,8 +158,8 @@ class AtomeClientTestCase(unittest.TestCase):
             + "/"
             + client._user_reference
             + API_ENDPOINT_CONSUMPTION
-            + '?period='
-            )
+            + "?period="
+        )
 
         m.get(period_url + "sod", status_code=200, text=json.dumps(consumption_sod))
         liveData = client.get_consumption(period="day")
