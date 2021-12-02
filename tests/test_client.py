@@ -2,13 +2,12 @@
 import json
 import logging
 import os
-import unittest
 import sys
+import unittest
 
 import requests
 import requests_mock
 import responses
-
 # Our test case class
 from pykeyatome import AtomeClient
 from pykeyatome.client import (API_BASE_URI, API_ENDPOINT_CONSUMPTION,
@@ -24,6 +23,7 @@ requests_log.propagate = True
 
 class PyAtomeError(Exception):
     """Class used for exception"""
+
     pass
 
 
