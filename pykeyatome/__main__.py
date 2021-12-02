@@ -8,11 +8,9 @@ from pykeyatome.client import AtomeClient
 
 
 def main():
-    """This is the function that manages."""
+    """Define the main function."""
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-u", "--username", required=True, help="Atome username"
-    )
+    parser.add_argument("-u", "--username", required=True, help="Atome username")
     parser.add_argument("-p", "--password", required=True, help="Password")
     parser.add_argument(
         "--debug", action="store_true", help="Print debug messages to stderr"
