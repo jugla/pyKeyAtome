@@ -1,4 +1,4 @@
-"""Main to use the atome library"""
+"""Main to use the atome library."""
 import argparse
 import json
 import logging
@@ -8,7 +8,7 @@ from pykeyatome import AtomeClient
 
 
 def main():
-    """Main function"""
+    """Main function."""
     parser = argparse.ArgumentParser()
     parser.add_argument('-u', '--username', required=True, help='Atome username')
     parser.add_argument('-p', '--password', required=True, help='Password')

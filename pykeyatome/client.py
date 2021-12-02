@@ -1,3 +1,4 @@
+"""Class client for atome protocol."""
 import json
 import simplejson
 import requests
@@ -16,12 +17,12 @@ MAX_RETRIES = 3
 
 
 class PyAtomeError(Exception):
-    """Exception class"""
+    """Exception class."""
     pass
 
 
 class AtomeClient(object):
-    """The client class"""
+    """The client class."""
     def __init__(self, username, password, session=None, timeout=None):
         """Initialize the client object."""
         self.username = username
