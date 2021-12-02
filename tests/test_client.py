@@ -179,9 +179,8 @@ class AtomeClientTestCase(unittest.TestCase):
         liveData = client.get_consumption(period="week")
         assert liveData["total"] == 70
 
-        # fmt: off
-        m.get(period_url + "som", status_code=200, text=json.dumps(consumption_som))
-        # fmt: on
+        URL_MONTH = "som"
+        m.get(period_url + URL_MONTH, status_code=200, text=json.dumps(consumption_som))
         liveData = client.get_consumption(period="month")
         assert liveData["total"] == 300
 
