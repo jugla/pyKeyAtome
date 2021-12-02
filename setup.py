@@ -15,5 +15,5 @@ setuptools.setup(
     packages=setuptools.find_packages(include=["pykeyatome"]),
     setup_requires=["requests", "setuptools"],
     install_requires=["requests", "fake_useragent", "simplejson"],
-    entry_points={"console_scripts": ["pykeyatome = pykeyatome.__main__:main"]}
+    entry_points={"console_scripts": ["pykeyatome = pykeyatome.__main__:main"]},
 )
