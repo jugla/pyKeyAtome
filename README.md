@@ -1,4 +1,4 @@
-# Atome PyPi
+# KeyAtome PyPi
 ![GitHub release](https://img.shields.io/github/release/jugla/pyKeyAtome)
 
 Get your energy consumption data from Atome, a Linky-compatible device made by Total/Direct-Energie.
