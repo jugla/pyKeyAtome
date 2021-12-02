@@ -1,4 +1,4 @@
-# The class used
+"""Module used to test library"""
 import json
 import logging
 import os
@@ -23,12 +23,15 @@ requests_log.propagate = True
 
 
 class PyAtomeError(Exception):
+    """Class used for exception"""
     pass
 
 
 class AtomeClientTestCase(unittest.TestCase):
+    """Class used to test"""
 
     def test_AtomeClient(self):
+        """test login"""
         username = "test_login"
         password = "test_password"
         client = AtomeClient(username, password)
@@ -37,6 +40,7 @@ class AtomeClientTestCase(unittest.TestCase):
         assert client._timeout is None
 
     def test_AtomeClientWithTimeout(self):
+        """test login with timeout"""
         username = "test_login"
         password = "test_password"
 
@@ -46,6 +50,7 @@ class AtomeClientTestCase(unittest.TestCase):
         assert client._timeout == 1
 
     def test_AtomeClientWithSession(self):
+        """test login with session"""
         username = "test_login"
         password = "test_password"
         session = requests.session()
@@ -57,6 +62,7 @@ class AtomeClientTestCase(unittest.TestCase):
 
     @requests_mock.Mocker()
     def test_login(self, m):
+        """test login with cookie"""
         cookies = {"PHPSESSID": "TEST"}
         __location__ = os.path.realpath(
             os.path.join(os.getcwd(), os.path.dirname(__file__))
@@ -77,7 +83,7 @@ class AtomeClientTestCase(unittest.TestCase):
 
     @requests_mock.Mocker()
     def test_get_live(self, m):
-
+        """retrieve live"""
         client = self.test_login()
 
         __location__ = os.path.realpath(
@@ -102,6 +108,7 @@ class AtomeClientTestCase(unittest.TestCase):
 
     @requests_mock.Mocker()
     def test_relog_after_session_down(self, m):
+        """relog"""
         # we login
         client = self.test_login()
         # # then we erase the session
@@ -140,6 +147,7 @@ class AtomeClientTestCase(unittest.TestCase):
 
     @requests_mock.Mocker()
     def test_consumption(self, m):
+        """retrieve onsumption"""
 
         client = self.test_login()
 
@@ -181,9 +189,8 @@ class AtomeClientTestCase(unittest.TestCase):
         liveData = client.get_consumption(period="year")
         assert liveData["total"] == 3650
 
-    # TODO: test get_consumption with proper period, or with unproper period
-
     def test(self):
+        """test method"""
         data = None
         if not data:
             assert True
