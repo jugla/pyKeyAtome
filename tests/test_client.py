@@ -9,9 +9,8 @@ import requests
 import requests_mock
 import responses
 # Our test case class
-from pykeyatome import AtomeClient
 from pykeyatome.client import (API_BASE_URI, API_ENDPOINT_CONSUMPTION,
-                               API_ENDPOINT_LIVE, LOGIN_URL)
+                               API_ENDPOINT_LIVE, AtomeClient, LOGIN_URL)
 
 # You must initialize logging, otherwise you'll not see debug output.
 logging.basicConfig()
