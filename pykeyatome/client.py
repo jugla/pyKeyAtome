@@ -1,8 +1,9 @@
 """Class client for atome protocol."""
 import json
+import logging
+
 import simplejson
 import requests
-import logging
 from fake_useragent import UserAgent
 
 COOKIE_NAME = "PHPSESSID"
@@ -18,6 +19,7 @@ MAX_RETRIES = 3
 
 class PyAtomeError(Exception):
     """Exception class."""
+
     pass
 
 
@@ -38,7 +40,7 @@ class AtomeClient(object):
         if self._session is None:
             self._session = requests.session()
             # adding fake user-agent header
-            self._session.headers.update({'User-agent': str(UserAgent().random)})
+            self._session.headers.update({"User-agent": str(UserAgent().random)})
         return self._login()
 
     def _login(self):
@@ -46,10 +48,12 @@ class AtomeClient(object):
         payload = {"email": self.username, "plainPassword": self.password}
 
         try:
-            req = self._session.post(LOGIN_URL,
-                               json=payload,
-                               headers={"content-type": "application/json"},
-                               timeout=self._timeout)
+            req = self._session.post(
+                LOGIN_URL,
+                json=payload,
+                headers={"content-type": "application/json"},
+                timeout=self._timeout,
+        )
         except OSError:
             raise PyAtomeError("Can not login to API")
 
@@ -62,7 +66,12 @@ class AtomeClient(object):
             self._user_id = user_id
             self._user_reference = user_reference
         except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
-            raise PyAtomeError("Impossible to decode response: \nResponse was: [%s] %s", str(e), str(req.status_code), str(req.text))
+            raise PyAtomeError(
+                "Impossible to decode response: \nResponse was: [%s] %s",
+                str(e),
+                str(req.status_code),
+                str(req.text)
+            )
 
         return True
 
@@ -90,7 +99,7 @@ class AtomeClient(object):
         if req.status_code == 403:
             # session is wrong, need to relogin
             self.login()
-            logging.info("Got 403, relogging (max retries: %s)",str(max_retries))
+            logging.info("Got 403, relogging (max retries: %s)", str(max_retries))
             return self._get_live(max_retries+1)
 
         if req.text == "":
@@ -98,15 +107,24 @@ class AtomeClient(object):
 
         try:
             json_output = req.json()
-        except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
-            raise PyAtomeError("Impossible to decode response: " + str(e) + "\nResponse was: " + str(req.text))
+        except (
+            OSError,
+            json.decoder.JSONDecodeError,
+            simplejson.errors.JSONDecodeError
+        ) as e:
+            raise PyAtomeError(
+                "Impossible to decode response: "
+                + str(e)
+                + "\nResponse was: "
+                + str(req.text)
+            )
 
         return json_output
 
     def _get_consumption(self, period, max_retries=0):
         """Get consumption according to period."""
         """ Period can be: day, week, month, year"""
-        if period not in ['day','week','month','year']:
+        if period not in ["day", "week", "month", "year"]:
             raise ValueError("Period %s out of range. Shall be either 'day', 'week', 'month' or 'year'." , str(period))
 
         if max_retries > MAX_RETRIES:
@@ -123,8 +141,7 @@ class AtomeClient(object):
             + period[:1]
         )
         try:
-            req = self._session.get(consumption_url,
-                                    timeout=self._timeout)
+            req = self._session.get(consumption_url, timeout=self._timeout)
 
         except OSError as e:
             raise PyAtomeError("Could not access Atome's API: " + str(e))
@@ -141,7 +158,12 @@ class AtomeClient(object):
         try:
             json_output = req.json()
         except (OSError, json.decoder.JSONDecodeError, simplejson.errors.JSONDecodeError) as e:
-            raise PyAtomeError("Impossible to decode response: " + str(e) + "\nResponse was: " + str(req.text))
+            raise PyAtomeError(
+                "Impossible to decode response: "
+                + str(e)
+                + "\nResponse was: "
+                + str(req.text)
+            )
 
         return json_output
 
@@ -157,4 +179,3 @@ class AtomeClient(object):
         """Close current session."""
         self._session.close()
         self._session = None
-

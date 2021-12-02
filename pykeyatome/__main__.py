@@ -10,23 +10,23 @@ from pykeyatome import AtomeClient
 def main():
     """Main function."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('-u', '--username', required=True, help='Atome username')
-    parser.add_argument('-p', '--password', required=True, help='Password')
+    parser.add_argument("-u", "--username", required=True, help="Atome username")
+    parser.add_argument("-p", "--password", required=True, help="Password")
     parser.add_argument(
-        '--debug', action='store_true', help='Print debug messages to stderr'
+        "--debug", action="store_true", help="Print debug messages to stderr"
     )
     parser.add_argument(
-       'action',
-       type=str,
-       default='live',
-       help='Action',
-       choices=['live','consumption'],
+        "action",
+        type=str,
+        default="live",
+        help="Action",
+        choices=["live","consumption"],
     )
     parser.add_argument(
-       '--period',
-       required=False,
-       help='Period (only used with Action=consumption)',
-       choices=['day','week','month','year'],
+        "--period",
+        required=False,
+        help="Period (only used with Action=consumption)",
+        choices=["day","week","month","year"],
     )
     args = parser.parse_args()
 
@@ -53,7 +53,7 @@ def main():
             client.close_session()
 
     elif args.action == "consumption":
-        if args.period not in ["day","week","month","year"]:
+        if args.period not in ["day", "week", "month", "year"]:
             print("Please provide a proper period.")
         else:
             try:
@@ -67,9 +67,9 @@ def main():
                 client.close_session()
     else:
         print("Action not implemented %s", args.action)
-        print("Usage : __main__ -u username -p pwd [--debug] [live|consumption [day|week|month|year]]")
+        print(
+            "Usage : __main__ -u username -p pwd [--debug] [live|consumption [day|week|month|year]]"
+        )
 
 if __name__ == "__main__":
     sys.exit(main())
-
-
