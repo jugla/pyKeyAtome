@@ -1,4 +1,5 @@
 # Atome PyPi
+![GitHub release](https://img.shields.io/github/release/jugla/pyKeyAtome)
 
 Get your energy consumption data from Atome, a Linky-compatible device made by Total/Direct-Energie.
 
@@ -29,10 +30,6 @@ This project is based on reverse engineering of Atome IOS APP performed by BaQs.
 ## Contributing
 
 Any contribution is welcome, considering the number of features the API provides, there is room for improvement!
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/jugla/pyKeyAtome/tags). 
 
 ## Acknowledgments
 
