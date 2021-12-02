@@ -1,0 +1,5 @@
+fake-useragent==0.1.11
+requests==2.22.0
+requests-mock==1.6.0
+responses==0.10.6
+simplejson==3.16.0
