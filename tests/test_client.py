@@ -8,6 +8,7 @@ import unittest
 import requests
 import requests_mock
 import responses
+
 # Our test case class
 from pykeyatome.client import (
     API_BASE_URI,
