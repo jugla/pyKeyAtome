@@ -82,7 +82,6 @@ class AtomeClient(object):
 
     def _get_live(self, max_retries=0):
         """Get live data."""
-
         if max_retries > MAX_RETRIES:
             raise PyAtomeError("Can't gather proper data. Max retries exceeded.")
 
