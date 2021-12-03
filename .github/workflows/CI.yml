@@ -59,7 +59,7 @@ jobs:
             --verbose \
             --cov-report term-missing \
             --cov-report xml \
-            --cov=pyairvisual tests
+            --cov=pykeyatome tests
       - uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
