@@ -13,7 +13,7 @@ The `__main__.py` is provided to show an example of use.
 
 3 types of function provided by client.py in `AtomeClient` class:
 - login : to be logged to the sever
-- get_live : to retrieve live statitics (instant power)
+- get_live : to retrieve live statistics (instant power)
 - get_consumption(period) : to retrieve the consumption since a period (day/week/month/year)
 
 ## Acknowledgments
