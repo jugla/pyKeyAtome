@@ -18,6 +18,7 @@ MAX_RETRIES = 3
 
 _LOGGER = logging.getLogger(__name__)
 
+
 class PyAtomeError(Exception):
     """Exception class."""
 
@@ -88,7 +89,6 @@ class AtomeClient(object):
 
         return True
 
-
     def _get_info_from_server(self, url, max_retries=0):
         error_flag = False
 
@@ -105,7 +105,6 @@ class AtomeClient(object):
             error_flag = True
         if error_flag:
             return None
-
 
         if req.status_code == 403:
             # session is wrong, need to relogin
@@ -137,7 +136,6 @@ class AtomeClient(object):
 
         return json_output
 
-
     def get_live(self):
         """Get current data."""
         live_url = (
@@ -168,7 +166,6 @@ class AtomeClient(object):
             + "?period=so"
             + period[:1]
         )
-
 
         return self._get_info_from_server(consumption_url)
 
