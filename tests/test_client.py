@@ -147,8 +147,9 @@ class AtomeClientTestCase(unittest.TestCase):
         m.get(live_url, text="Wrong session", status_code=403)
 
         # shall generate an exception
-        with self.assertRaises(Exception):
-            client.get_live()
+        # with self.assertRaises(Exception):
+        #    client.get_live()
+        assert client.get_live() is None
 
     @requests_mock.Mocker()
     def test_consumption(self, m):

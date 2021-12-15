@@ -61,7 +61,7 @@ class AtomeClient(object):
             _LOGGER.debug("Can not login to API")
             error_flag = True
         if error_flag:
-           return False
+            return False
 
         try:
             response_json = req.json()
@@ -84,7 +84,7 @@ class AtomeClient(object):
             )
             error_flag = True
         if error_flag:
-           return False
+            return False
 
         return True
 
@@ -104,7 +104,7 @@ class AtomeClient(object):
             _LOGGER.debug("Could not access Atome's API: " + str(e))
             error_flag = True
         if error_flag:
-           return None
+            return None
 
 
         if req.status_code == 403:
@@ -133,7 +133,7 @@ class AtomeClient(object):
             )
             error_flag = True
         if error_flag:
-           return None
+            return None
 
         return json_output
 
