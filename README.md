@@ -22,4 +22,4 @@ The `__main__.py` is provided to show an example of use.
 * This project is a fork of https://github.com/BaQs/pyAtome (seems to be unmaintained)
 
 ### Breaking change
-**V1.2.0** Since this version PyAtomeError is no more used. Instead login return *False* if error , and live/consumption return *None*
+**V1.2.0** Since this version PyAtomeError exception is no more used. Instead login return *False* if error , and live/consumption return *None*
