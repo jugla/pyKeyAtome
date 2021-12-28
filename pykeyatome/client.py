@@ -6,6 +6,14 @@ import requests
 import simplejson
 from fake_useragent import UserAgent
 
+# export const
+DAILY_PERIOD_TYPE = "day"
+WEEKLY_PERIOD_TYPE = "week"
+MONTHLY_PERIOD_TYPE = "month"
+YEARLY_PERIOD_TYPE = "year"
+
+
+# internal const
 COOKIE_NAME = "PHPSESSID"
 API_BASE_URI = "https://esoftlink.esoftthings.com"
 API_ENDPOINT_LOGIN = "/api/user/login.json"
@@ -62,7 +70,7 @@ class AtomeClient(object):
             _LOGGER.debug("Can not login to API")
             error_flag = True
         if error_flag:
-            return False
+            return None
 
         try:
             response_json = req.json()
@@ -85,9 +93,9 @@ class AtomeClient(object):
             )
             error_flag = True
         if error_flag:
-            return False
+            return None
 
-        return True
+        return response_json
 
     def _get_info_from_server(self, url, max_retries=0):
         error_flag = False
@@ -151,7 +159,7 @@ class AtomeClient(object):
 
     def get_consumption(self, period):
         """Get current data."""
-        if period not in ["day", "week", "month", "year"]:
+        if period not in [DAILY_PERIOD_TYPE, WEEKLY_PERIOD_TYPE, MONTHLY_PERIOD_TYPE, YEARLY_PERIOD_TYPE]:
             raise ValueError(
                 "Period %s out of range. Shall be either 'day', 'week', 'month' or 'year'.",
                 str(period),
