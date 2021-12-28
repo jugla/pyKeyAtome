@@ -163,7 +163,7 @@ class AtomeClient(object):
             DAILY_PERIOD_TYPE,
             WEEKLY_PERIOD_TYPE,
             MONTHLY_PERIOD_TYPE,
-            YEARLY_PERIOD_TYPE
+            YEARLY_PERIOD_TYPE,
         ]:
             raise ValueError(
                 "Period %s out of range. Shall be either 'day', 'week', 'month' or 'year'.",
