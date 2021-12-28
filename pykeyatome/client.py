@@ -159,7 +159,12 @@ class AtomeClient(object):
 
     def get_consumption(self, period):
         """Get current data."""
-        if period not in [DAILY_PERIOD_TYPE, WEEKLY_PERIOD_TYPE, MONTHLY_PERIOD_TYPE, YEARLY_PERIOD_TYPE]:
+        if period not in [
+            DAILY_PERIOD_TYPE,
+            WEEKLY_PERIOD_TYPE,
+            MONTHLY_PERIOD_TYPE,
+            YEARLY_PERIOD_TYPE
+        ]:
             raise ValueError(
                 "Period %s out of range. Shall be either 'day', 'week', 'month' or 'year'.",
                 str(period),
