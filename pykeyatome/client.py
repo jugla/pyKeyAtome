@@ -81,6 +81,7 @@ class AtomeClient(object):
             self._user_id = user_id
             self._user_reference = user_reference
         except (
+            KeyError,
             OSError,
             json.decoder.JSONDecodeError,
             simplejson.errors.JSONDecodeError,
