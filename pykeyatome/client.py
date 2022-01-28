@@ -36,7 +36,9 @@ class PyAtomeError(Exception):
 class AtomeClient(object):
     """The client class."""
 
-    def __init__(self, username, password, atome_linky_number=1, session=None, timeout=None):
+    def __init__(
+        self, username, password, atome_linky_number=1, session=None, timeout=None
+    ):
         """Initialize the client object."""
         self.username = username
         self.password = password
@@ -45,7 +47,7 @@ class AtomeClient(object):
         self._session = session
         self._data = {}
         self._timeout = timeout
-        #internal array start from 0 and not 1. Shift by 1.
+        # internal array start from 0 and not 1. Shift by 1.
         self._atome_linky_number = atome_linky_number - 1
 
     def login(self):
@@ -78,7 +80,9 @@ class AtomeClient(object):
             response_json = req.json()
 
             user_id = str(response_json["id"])
-            user_reference = response_json["subscriptions"][self._atome_linky_number]["reference"]
+            user_reference = response_json["subscriptions"][self._atome_linky_number][
+                "reference"
+            ]
 
             self._user_id = user_id
             self._user_reference = user_reference
