@@ -12,6 +12,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-u", "--username", required=True, help="Atome username")
     parser.add_argument("-p", "--password", required=True, help="Password")
+    parser.add_argument("-l", "--atome_linky_number", help="atome_linky_number")
     parser.add_argument(
         "--debug", action="store_true", help="Print debug messages to stderr"
     )
@@ -29,8 +30,11 @@ def main():
         choices=["day", "week", "month", "year"],
     )
     args = parser.parse_args()
-
-    client = AtomeClient(args.username, args.password)
+    if args.atome_linky_number:
+       atome_linky_number = args.atome_linky_number
+    else:
+       atome_linky_number = 1
+    client = AtomeClient(args.username, args.password, atome_linky_number)
 
     if args.debug:
         # You must initialize logging, otherwise you'll not see debug output.

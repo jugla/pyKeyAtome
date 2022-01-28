@@ -39,7 +39,8 @@ class AtomeClientTestCase(unittest.TestCase):
         """Test login."""
         username = "test_login"
         password = "test_password"
-        client = AtomeClient(username, password)
+        atome_linky_number = 1
+        client = AtomeClient(username, password, atome_linky_number)
         assert client.username == username
         assert client.password == password
         assert client._timeout is None
@@ -48,8 +49,9 @@ class AtomeClientTestCase(unittest.TestCase):
         """Test login with timeout."""
         username = "test_login"
         password = "test_password"
+        atome_linky_number = 1
 
-        client = AtomeClient(username, password, timeout=1)
+        client = AtomeClient(username, password, atome_linky_number, timeout=1)
         assert client.username == username
         assert client.password == password
         assert client._timeout == 1
@@ -58,9 +60,10 @@ class AtomeClientTestCase(unittest.TestCase):
         """Test login with session."""
         username = "test_login"
         password = "test_password"
+        atome_linky_number = 1
         session = requests.session()
 
-        client = AtomeClient(username, password, session=session)
+        client = AtomeClient(username, password, atome_linky_number, session=session)
         assert client.username == username
         assert client.password == password
         assert client._session == session
@@ -76,7 +79,7 @@ class AtomeClientTestCase(unittest.TestCase):
             answer = json.load(f)
 
         m.post(LOGIN_URL, status_code=200, cookies=cookies, text=json.dumps(answer))
-        client = AtomeClient("test_login", "test_password")
+        client = AtomeClient("test_login", "test_password", 1)
         client.login()
 
         logging.debug(client)
