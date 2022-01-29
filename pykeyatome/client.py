@@ -48,7 +48,7 @@ class AtomeClient(object):
         self._data = {}
         self._timeout = timeout
         # internal array start from 0 and not 1. Shift by 1.
-        self._atome_linky_number = atome_linky_number - 1
+        self._atome_linky_number = int(atome_linky_number) - 1
 
     def login(self):
         """Set http session."""
