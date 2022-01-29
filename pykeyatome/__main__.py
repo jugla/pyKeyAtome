@@ -31,9 +31,9 @@ def main():
     )
     args = parser.parse_args()
     if args.atome_linky_number:
-       atome_linky_number = args.atome_linky_number
+        atome_linky_number = args.atome_linky_number
     else:
-       atome_linky_number = 1
+        atome_linky_number = 1
     client = AtomeClient(args.username, args.password, atome_linky_number)
 
     if args.debug:
