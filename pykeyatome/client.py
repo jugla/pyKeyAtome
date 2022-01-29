@@ -105,6 +105,7 @@ class AtomeClient(object):
         return response_json
 
     def get_user_reference(self):
+        """Get user reference respect to linky number."""
         return self._user_reference
 
     def _get_info_from_server(self, url, max_retries=0):
