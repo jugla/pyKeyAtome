@@ -2,7 +2,7 @@
 ![GitHub release](https://img.shields.io/github/release/jugla/pyKeyAtome)
 
 Get your energy consumption data from Atome, a Linky-compatible device made by Total/Direct-Energie.
-A account can have several linky. With this library, you can adress them one by one
+A account can have several linky. With this library, you can address them one by one
 
 ### Installing
 ```
@@ -14,7 +14,7 @@ The `__main__.py` is provided to show an example of use.
 
 4 types of function provided by client.py in `AtomeClient` class:
 - login : to be logged to the server
-- get_user_reference : to know which linky you have adressed 
+- get_user_reference : to know which linky you have addressed 
 - get_live : to retrieve live statistics (instant power)
 - get_consumption(period) : to retrieve the consumption since a period (day/week/month/year)
 
