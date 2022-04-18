@@ -76,6 +76,13 @@ class AtomeClient(object):
         if error_flag:
             return None
 
+        # check cookie
+        if 'PHPSESSID' not in req.cookies:
+            _LOGGER.debug("Atome Login error: Please check your username/password: %s ", str(req.text))
+            error_flag = True
+        if error_flag:
+            return None
+
         try:
             response_json = req.json()
 
@@ -125,10 +132,10 @@ class AtomeClient(object):
         if error_flag:
             return None
 
-        if req.status_code == 403:
+        if req.status_code == 403 or req.status_code == 302:
             # session is wrong, need to relogin
             self.login()
-            logging.info("Got 403, relogging (max retries: %s)", str(max_retries))
+            logging.info("Got error %s, relogging (max retries: %s)", str(req.status_code), str(max_retries))
             return self._get_info_from_server(url, max_retries + 1)
 
         if req.text == "":
