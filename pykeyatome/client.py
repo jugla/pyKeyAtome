@@ -76,16 +76,6 @@ class AtomeClient(object):
         if error_flag:
             return None
 
-        # check cookie
-        if 'PHPSESSID' not in req.cookies:
-            _LOGGER.debug(
-                "Atome Login error: Please check your username/password: %s ",
-                str(req.text),
-            )
-            error_flag = True
-        if error_flag:
-            return None
-
         try:
             response_json = req.json()
 

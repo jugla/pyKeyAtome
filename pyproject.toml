@@ -19,7 +19,7 @@ use_parentheses = true
 
 [tool.poetry]
 name = "pykeyatome"
-version = "1.5.0"
+version = "1.5.1"
 description = "A simple API for key atome electricity consumption"
 readme = "README.md"
 authors = ["jugla"]
