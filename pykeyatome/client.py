@@ -125,7 +125,7 @@ class AtomeClient(object):
         if error_flag:
             return None
 
-        if req.status_code == 403 or req.status_code == 302:
+        if req.status_code == 403:
             # session is wrong, need to relogin
             self.login()
             logging.info("Got error %s, relogging (max retries: %s)", str(req.status_code), str(max_retries))
