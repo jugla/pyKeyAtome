@@ -182,13 +182,15 @@ class AtomeClient(object):
             )
         consumption_url = (
             API_BASE_URI
-            + "/api/subscription/"
+#            + "/api/subscription/"
+            + "/apiV2/dataJSON/"
             + self._user_id
             + "/"
             + self._user_reference
-            + API_ENDPOINT_CONSUMPTION
-            + "?period=so"
-            + period[:1]
+#            + API_ENDPOINT_CONSUMPTION
+#            + "?period=so"
+#            + period[:1]
+            + "/3months"
         )
 
         return self._get_info_from_server(consumption_url)
