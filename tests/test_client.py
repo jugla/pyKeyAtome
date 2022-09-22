@@ -168,9 +168,9 @@ class AtomeClientTestCase(unittest.TestCase):
         period_url = (
             API_BASE_URI
             + "/apiV2/dataJSON/"
-            + self._user_id
+            + client._user_id
             + "/"
-            + self._user_reference
+            + client._user_reference
             + "/3months"
         )
 
