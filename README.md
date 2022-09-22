@@ -27,3 +27,5 @@ The `__main__.py` is provided to show an example of use.
 **V1.2.0** Since this version PyAtomeError exception is no more used. Instead login return *False* if error , and live/consumption return *None*
 
 **V1.3.0** Login return *None* if error
+
+**V2.0.0** 1rst implementation of TotalEnergy V2 protocol : Login, Live, Day are available.
