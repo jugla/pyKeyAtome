@@ -162,40 +162,21 @@ class AtomeClientTestCase(unittest.TestCase):
         __location__ = os.path.realpath(
             os.path.join(os.getcwd(), os.path.dirname(__file__))
         )
-        with open(os.path.join(__location__, "data/consumption_sod.json"), "r") as f:
-            consumption_sod = json.load(f)
-        with open(os.path.join(__location__, "data/consumption_sow.json"), "r") as f:
-            consumption_sow = json.load(f)
-        with open(os.path.join(__location__, "data/consumption_som.json"), "r") as f:
-            consumption_som = json.load(f)
-        with open(os.path.join(__location__, "data/consumption_soy.json"), "r") as f:
-            consumption_soy = json.load(f)
+        with open(os.path.join(__location__, "data/3months.json"), "r") as f:
+            consumption_3months = json.load(f)
 
         period_url = (
             API_BASE_URI
-            + "/api/subscription/"
-            + client._user_id
+            + "/apiV2/dataJSON/"
+            + self._user_id
             + "/"
-            + client._user_reference
-            + API_ENDPOINT_CONSUMPTION
-            + "?period="
+            + self._user_reference
+            + "/3months"
         )
 
-        m.get(period_url + "sod", status_code=200, text=json.dumps(consumption_sod))
-        liveData = client.get_consumption(period="day")
-        assert liveData["total"] == 10
-
-        m.get(period_url + "sow", status_code=200, text=json.dumps(consumption_sow))
-        liveData = client.get_consumption(period="week")
-        assert liveData["total"] == 70
-
-        m.get(period_url + "som", status_code=200, text=json.dumps(consumption_som))
-        liveData = client.get_consumption(period="month")
-        assert liveData["total"] == 300
-
-        m.get(period_url + "soy", status_code=200, text=json.dumps(consumption_soy))
-        liveData = client.get_consumption(period="year")
-        assert liveData["total"] == 3650
+        m.get(period_url, status_code=200, text=json.dumps(consumption_3months))
+        periodData = client.get_consumption()
+        assert periodData["data"][-1]['totalConsumption'] == 12327
 
     def test(self):
         """Test method."""

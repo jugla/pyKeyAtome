@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyKeyAtome",
-    version="2.0.0",
+    version="2.1.0",
     license="MIT",
     author="jugla",
     author_email="jugla@users.github.com",

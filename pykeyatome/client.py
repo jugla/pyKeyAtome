@@ -168,28 +168,14 @@ class AtomeClient(object):
 
         return self._get_info_from_server(live_url)
 
-    def get_consumption(self, period):
+    def get_consumption(self):
         """Get current data."""
-        if period not in [
-            DAILY_PERIOD_TYPE,
-            WEEKLY_PERIOD_TYPE,
-            MONTHLY_PERIOD_TYPE,
-            YEARLY_PERIOD_TYPE,
-        ]:
-            raise ValueError(
-                "Period %s out of range. Shall be either 'day', 'week', 'month' or 'year'.",
-                str(period),
-            )
         consumption_url = (
             API_BASE_URI
-#            + "/api/subscription/"
             + "/apiV2/dataJSON/"
             + self._user_id
             + "/"
             + self._user_reference
-#            + API_ENDPOINT_CONSUMPTION
-#            + "?period=so"
-#            + period[:1]
             + "/3months"
         )
 

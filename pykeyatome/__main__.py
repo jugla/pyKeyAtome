@@ -23,12 +23,6 @@ def main():
         help="Action",
         choices=["live", "consumption"],
     )
-    parser.add_argument(
-        "--period",
-        required=False,
-        help="Period (only used with Action=consumption)",
-        choices=["day", "week", "month", "year"],
-    )
     args = parser.parse_args()
     if args.atome_linky_number:
         atome_linky_number = int(args.atome_linky_number)
@@ -55,22 +49,19 @@ def main():
             client.close_session()
 
     elif args.action == "consumption":
-        if args.period not in ["day", "week", "month", "year"]:
-            print("Please provide a proper period.")
-        else:
-            try:
-                client.login()
-                print(json.dumps(client.get_consumption(args.period), indent=2))
+        try:
+            client.login()
+            print(json.dumps(client.get_consumption(), indent=2))
 
-            except BaseException as exp:
-                print(exp)
-                return 1
-            finally:
-                client.close_session()
+        except BaseException as exp:
+            print(exp)
+            return 1
+        finally:
+            client.close_session()
     else:
         print("Action not implemented %s", args.action)
         print(
-            "Usage : __main__ -u username -p pwd [--debug] [live|consumption [day|week|month|year]]"
+            "Usage : __main__ -u username -p pwd [--debug] [live|consumption]"
         )
 
 

@@ -1,0 +1,13 @@
+{'data':
+    [
+        {'time': '2022-06-23T00:00:00+02:00', 'totalConsumption': 13596, 'consumption':
+            {'index1': 4221, 'bill1': 0.742896, 'priceindex1': '0.17600', 'index2': 9375, 'bill2': 1.975125, 'priceindex2': '0.21068'}
+        },
+        {'time': '2022-06-24T00:00:00+02:00', 'totalConsumption': 11052, 'consumption':
+            {'index1': 5667, 'bill1': 0.997392, 'priceindex1': '0.17600', 'index2': 5385, 'bill2': 1.1345118, 'priceindex2': '0.21068'}
+        },
+        {'time': '2022-06-25T00:00:00+02:00', 'totalConsumption': 12327, 'consumption':
+            {'index1': 5989, 'bill1': 1.054064, 'priceindex1': '0.17600', 'index2': 6338, 'bill2': 1.33528984, 'priceindex2': '0.21068'}
+        }
+    ]
+}
