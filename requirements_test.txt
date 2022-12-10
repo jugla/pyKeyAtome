@@ -1,4 +1,4 @@
-fake-useragent==0.1.11
+fake-useragent==1.1.1
 requests==2.22.0
 requests-mock==1.6.0
 responses==0.10.6
