@@ -16,7 +16,7 @@ The `__main__.py` is provided to show an example of use.
 - login : to be logged to the server
 - get_user_reference : to know which linky you have addressed 
 - get_live : to retrieve live statistics (instant power)
-- get_consumption(period) : to retrieve the consumption since a period (day/week/month/year)
+- get_consumption : to retrieve the consumption (by day over 3 months)
 
 ## Acknowledgments
 * Thanks to k20human for the original inspiration with https://github.com/k20human/domoticz-atome
@@ -29,3 +29,5 @@ The `__main__.py` is provided to show an example of use.
 **V1.3.0** Login return *None* if error
 
 **V2.0.0** 1rst implementation of TotalEnergy V2 protocol : Login, Live, Day are available.
+
+**V2.1.0** Clean APIv1 i.e. no more period (day, week, month, year)
