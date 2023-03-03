@@ -19,7 +19,7 @@ use_parentheses = true
 
 [tool.poetry]
 name = "pykeyatome"
-version = "2.1.1"
+version = "2.1.2"
 description = "A simple API for key atome electricity consumption"
 readme = "README.md"
 authors = ["jugla"]
@@ -29,9 +29,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
@@ -40,7 +37,7 @@ classifiers = [
 fake-useragent = "^1.1.1"
 requests = "^2.22.0"
 simplejson = "^3.16.0"
-python = ">=3.7.0,<3.11"
+python = ">=3.7.0,<3.20"
 
 [tool.poetry.dev-dependencies]
 requests-mock = "^1.6.0"
