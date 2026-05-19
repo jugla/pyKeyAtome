@@ -31,3 +31,5 @@ The `__main__.py` is provided to show an example of use.
 **V2.0.0** 1rst implementation of TotalEnergy V2 protocol : Login, Live, Day are available.
 
 **V2.1.0** Clean APIv1 i.e. no more period (day, week, month, year)
+
+**V3.0.0** 1rst implementation of TotalEnergy V3 protocol (login) 

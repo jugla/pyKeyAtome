@@ -12,6 +12,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-u", "--username", required=True, help="Atome username")
     parser.add_argument("-p", "--password", required=True, help="Password")
+    parser.add_argument("-r", "--ref_id", required=True, help="ref_id")
+    parser.add_argument("-i", "--user_id", required=True, help="user_id")
     parser.add_argument("-l", "--atome_linky_number", help="atome_linky_number")
     parser.add_argument(
         "--debug", action="store_true", help="Print debug messages to stderr"
@@ -28,7 +30,7 @@ def main():
         atome_linky_number = int(args.atome_linky_number)
     else:
         atome_linky_number = 1
-    client = AtomeClient(args.username, args.password, atome_linky_number)
+    client = AtomeClient(args.username, args.password, args.user_id, args.ref_id, atome_linky_number)
 
     if args.debug:
         # You must initialize logging, otherwise you'll not see debug output.
@@ -61,7 +63,7 @@ def main():
     else:
         print("Action not implemented %s", args.action)
         print(
-            "Usage : __main__ -u username -p pwd [--debug] [live|consumption]"
+            "Usage : __main__ -u username -p pwd [--debug] [live|consumption] -i user_id -r ref_id"
         )
 
 

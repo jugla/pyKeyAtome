@@ -19,7 +19,7 @@ use_parentheses = true
 
 [tool.poetry]
 name = "pykeyatome"
-version = "2.1.2"
+version = "3.0.0"
 description = "A simple API for key atome electricity consumption"
 readme = "README.md"
 authors = ["jugla"]
@@ -32,6 +32,10 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
+packages = [
+    { include = "pykeyatome" }
+]
+
 
 [tool.poetry.dependencies]
 fake-useragent = "^1.1.1"

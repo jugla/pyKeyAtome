@@ -3,6 +3,7 @@ import json
 import logging
 
 import requests
+import json
 import simplejson
 from fake_useragent import UserAgent
 
@@ -16,9 +17,8 @@ YEARLY_PERIOD_TYPE = "year"
 # internal const
 COOKIE_NAME = "PHPSESSID"
 API_BASE_URI = "https://esoftlink.esoftthings.com"
-API_ENDPOINT_LOGIN = "/api/user/login.json"
+API_ENDPOINT_LOGIN = "/login_check"
 API_ENDPOINT_LIVE = "/measure/live.json"
-API_ENDPOINT_CONSUMPTION = "/consumption.json"
 LOGIN_URL = API_BASE_URI + API_ENDPOINT_LOGIN
 
 DEFAULT_TIMEOUT = 10
@@ -37,13 +37,14 @@ class AtomeClient(object):
     """The client class."""
 
     def __init__(
-        self, username, password, atome_linky_number=1, session=None, timeout=None
+        self, username, password, user_id, user_reference,
+        atome_linky_number=1, session=None, timeout=None
     ):
         """Initialize the client object."""
         self.username = username
         self.password = password
-        self._user_id = None
-        self._user_reference = None
+        self._user_id = user_id
+        self._user_reference = user_reference #reference ID in web account
         self._session = session
         self._data = {}
         self._timeout = timeout
@@ -61,13 +62,13 @@ class AtomeClient(object):
     def _login(self):
         """Login to Atome's API."""
         error_flag = False
-        payload = {"email": self.username, "plainPassword": self.password}
+        payload = {"_username": self.username, "_password": self.password}
 
         try:
             req = self._session.post(
                 LOGIN_URL,
-                json=payload,
-                headers={"content-type": "application/json"},
+                data=payload,
+                headers={"content-type": "application/x-www-form-urlencoded"},
                 timeout=self._timeout,
             )
         except OSError:
@@ -79,13 +80,6 @@ class AtomeClient(object):
         try:
             response_json = req.json()
 
-            user_id = str(response_json["id"])
-            user_reference = response_json["subscriptions"][self._atome_linky_number][
-                "reference"
-            ]
-
-            self._user_id = user_id
-            self._user_reference = user_reference
         except (
             KeyError,
             OSError,
