@@ -33,3 +33,5 @@ The `__main__.py` is provided to show an example of use.
 **V2.1.0** Clean APIv1 i.e. no more period (day, week, month, year)
 
 **V3.0.0** 1rst implementation of TotalEnergy V3 protocol (login) 
+    REFERENCE_ID is the ID in your TotalEnergy Profile
+    USER_ID is something to retrieve via a dedicated script `find_user_id.bash` 
