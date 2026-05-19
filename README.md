@@ -34,4 +34,5 @@ The `__main__.py` is provided to show an example of use.
 
 **V3.0.0** 1rst implementation of TotalEnergy V3 protocol (login) 
     REFERENCE_ID is the ID in your TotalEnergy Profile
-    USER_ID is something to retrieve via a dedicated script `find_user_id.bash` 
+    USER_ID is something to retrieve via a dedicated script `find_user_id.bash`  (https://github.com/jugla/pyKeyAtome/tree/master/find_user_id) 
+    You have to edit it to set your password.
