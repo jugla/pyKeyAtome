@@ -68,7 +68,8 @@ class AtomeClient(object):
             req = self._session.post(
                 LOGIN_URL,
                 data=payload,
-                headers={"content-type": "application/x-www-form-urlencoded"},
+                #headers={"content-type": "application/x-www-form-urlencoded"},
+                allow_redirects=False,
                 timeout=self._timeout,
             )
         except OSError:
@@ -76,6 +77,15 @@ class AtomeClient(object):
             error_flag = True
         if error_flag:
             return None
+
+        cookies = self._session.cookies.get_dict()
+
+        if "PHPSESSID" not in cookies:
+            _LOGGER.debug("Login failed - no PHPSESSID")
+            error_flag = True
+        if error_flag:
+            return None
+
 
         try:
             response_json = req.json()
