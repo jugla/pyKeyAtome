@@ -39,3 +39,4 @@ The `__main__.py` is provided to show an example of use.
 
 **V3.0.1** add return in case of success in login 
 **V3.0.2** check cookie during login 
+**V3.0.3** clean code 

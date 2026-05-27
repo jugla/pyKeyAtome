@@ -68,7 +68,6 @@ class AtomeClient(object):
             req = self._session.post(
                 LOGIN_URL,
                 data=payload,
-                #headers={"content-type": "application/x-www-form-urlencoded"},
                 allow_redirects=False,
                 timeout=self._timeout,
             )
@@ -86,29 +85,7 @@ class AtomeClient(object):
         if error_flag:
             return None
 
-
-        try:
-            response_json = req.json()
-
-        except (
-            KeyError,
-            OSError,
-            json.decoder.JSONDecodeError,
-            simplejson.errors.JSONDecodeError,
-        ) as e:
-            _LOGGER.debug(
-                "Impossible to decode response: \nResponse was: [%s] %s",
-                str(e),
-                str(req.status_code),
-                str(req.text),
-            )
-            error_flag = True
-        if error_flag:
-            return None
-
         return {"user_id" :  self._user_id, "user_reference" : self._user_reference}
-        #here response_json is None
-        #return response_json
 
     def get_user_reference(self):
         """Get user reference respect to linky number."""
