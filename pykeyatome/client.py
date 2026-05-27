@@ -96,7 +96,9 @@ class AtomeClient(object):
         if error_flag:
             return None
 
-        return response_json
+        return {"user_id" :  self._user_id, "user_reference" : self._user_reference}
+        #here response_json is None
+        #return response_json
 
     def get_user_reference(self):
         """Get user reference respect to linky number."""
