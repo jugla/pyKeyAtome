@@ -227,8 +227,6 @@ def rapport_progression(total_utilisateurs):
 
         with verrou_stats:
             verifies_actuels = nb_verifies
-            trouves_actuels = nb_trouves
-            erreurs_actuelles = nb_erreurs
 
         maintenant = time.time()
         duree = maintenant - temps_debut
@@ -249,8 +247,6 @@ def rapport_progression(total_utilisateurs):
         print(
             f"[STATS] vérifiés={verifies_actuels} "
             f"({pourcentage:.2f}%) | "
-            f"trouvés={trouves_actuels} | "
-            f"erreurs={erreurs_actuelles} | "
             f"cadence={cadence_recente:.1f}/s (moy {cadence_totale:.1f}/s) | "
             f"écoulé={int(duree//60)}m{int(duree%60)}s | "
             f"ETA={eta_h}h{eta_m:02d}m"

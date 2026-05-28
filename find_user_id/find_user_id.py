@@ -229,8 +229,6 @@ def progress_reporter(total_users):
 
         with stats_lock:
             current_checked = checked_count
-            current_found = found_count
-            current_errors = error_count
 
         now = time.time()
         elapsed = now - start_time
@@ -251,8 +249,6 @@ def progress_reporter(total_users):
         print(
             f"[STATS] checked={current_checked} "
             f"({progress_pct:.2f}%) | "
-            f"hits={current_found} | "
-            f"errors={current_errors} | "
             f"rate={rate_recent:.1f}/s (avg {rate_total:.1f}/s) | "
             f"elapsed={int(elapsed//60)}m{int(elapsed%60)}s | "
             f"ETA={eta_h}h{eta_m:02d}m"
