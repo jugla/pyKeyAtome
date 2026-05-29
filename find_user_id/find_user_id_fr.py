@@ -84,7 +84,8 @@ derniere_connexion = 0
 # Statistiques
 nb_verifies = 0
 nb_trouves = 0
-nb_erreurs = 0
+nb_exceptions = 0
+ids_en_exception = set()       # identifiants dont la requête a levé une exception réseau
 temps_debut = 0
 
 # Signal d'arrêt quand un identifiant valide est trouvé
@@ -152,7 +153,7 @@ def arret_avec_succes(identifiant, reponse):
     print("-" * 60)
     with verrou_stats:
         print(f"[FIN] Vérifiés        : {nb_verifies}")
-        print(f"[FIN] Erreurs         : {nb_erreurs}")
+        print(f"[FIN] Exceptions      : {nb_exceptions}")
     print(f"[FIN] Temps écoulé    : {int(duree//60)}m{int(duree%60)}s")
     print("=" * 60)
 
@@ -165,7 +166,7 @@ def arret_avec_succes(identifiant, reponse):
 # VERIFICATION D'UN IDENTIFIANT
 # ------------------------------------------------------------
 def verifier_utilisateur(id_utilisateur):
-    global nb_verifies, nb_trouves, nb_erreurs
+    global nb_verifies, nb_trouves, nb_exceptions
 
     # Si un identifiant valide a déjà été trouvé par un autre thread,
     # on n'effectue plus aucune requête.
@@ -209,8 +210,14 @@ def verifier_utilisateur(id_utilisateur):
                     arret_avec_succes(identifiant, r.text)
 
         except requests.RequestException:
+            # Une exception réseau compte aussi comme "vérifié" : on a tenté
+            # cet identifiant mais sans réponse, on passe donc au suivant. Ce
+            # n'est PAS un "ce n'est pas le bon" fiable, on note l'identifiant
+            # pour le signaler dans le rapport de fin.
             with verrou_stats:
-                nb_erreurs += 1
+                nb_verifies += 1
+                nb_exceptions += 1
+                ids_en_exception.add(id_utilisateur)
 
     time.sleep(0.01)
 
@@ -227,6 +234,7 @@ def rapport_progression(total_utilisateurs):
 
         with verrou_stats:
             verifies_actuels = nb_verifies
+            exceptions_actuelles = nb_exceptions
 
         maintenant = time.time()
         duree = maintenant - temps_debut
@@ -247,6 +255,7 @@ def rapport_progression(total_utilisateurs):
         print(
             f"[STATS] vérifiés={verifies_actuels} "
             f"({pourcentage:.2f}%) | "
+            f"exceptions={exceptions_actuelles} | "
             f"cadence={cadence_recente:.1f}/s (moy {cadence_totale:.1f}/s) | "
             f"écoulé={int(duree//60)}m{int(duree%60)}s | "
             f"ETA={eta_h}h{eta_m:02d}m"
@@ -289,6 +298,8 @@ thread_rapport = threading.Thread(
 thread_rapport.start()
 
 nb_soumis = 0
+debut_lot = DEBUT_RECHERCHE     # premier id du lot courant (pas encore affiché)
+dernier_id = DEBUT_RECHERCHE    # dernier id réellement soumis
 with ThreadPoolExecutor(max_workers=NB_THREADS) as executor:
     for id_utilisateur in range(DEBUT_RECHERCHE, FIN_RECHERCHE):
         # Si un identifiant valide a été trouvé entre-temps, on arrête
@@ -300,9 +311,15 @@ with ThreadPoolExecutor(max_workers=NB_THREADS) as executor:
 
         executor.submit(verifier_utilisateur, id_utilisateur)
         nb_soumis += 1
+        dernier_id = id_utilisateur
 
         if nb_soumis % 10000 == 0:
-            print(f"[FILE] {nb_soumis}/{total_utilisateurs} identifiants envoyés dans la file")
+            print(f"[FILE] identifiants {debut_lot} à {id_utilisateur} envoyés dans la file d'attente ({nb_soumis}/{total_utilisateurs})")
+            debut_lot = id_utilisateur + 1
+
+    # Affiche le dernier lot partiel (quand la fin n'est pas un multiple de 10 000)
+    if debut_lot <= dernier_id:
+        print(f"[FILE] identifiants {debut_lot} à {dernier_id} envoyés dans la file d'attente ({nb_soumis}/{total_utilisateurs})")
 
 print("=" * 60)
 print("[+] Toutes les tâches ont été soumises. Attente de la fin des workers...")
@@ -314,7 +331,13 @@ duree_totale = time.time() - temps_debut
 with verrou_stats:
     print("=" * 60)
     print("[FIN] Scan terminé - AUCUN IDENTIFIANT TROUVE sur la plage complète.")
-    print(f"[FIN] Total vérifiés : {nb_verifies}")
-    print(f"[FIN] Total erreurs  : {nb_erreurs}")
-    print(f"[FIN] Temps total    : {int(duree_totale//3600)}h{int((duree_totale%3600)//60)}m{int(duree_totale%60)}s")
+    print(f"[FIN] Total vérifiés   : {nb_verifies}")
+    print(f"[FIN] Total exceptions : {nb_exceptions}")
+    print(f"[FIN] Temps total      : {int(duree_totale//3600)}h{int((duree_totale%3600)//60)}m{int(duree_totale%60)}s")
+    if ids_en_exception:
+        ids_echec = sorted(ids_en_exception)
+        print("-" * 60)
+        print(f"[FIN] {len(ids_echec)} identifiant(s) ont provoqué une exception réseau et")
+        print("[FIN] n'ont PAS été vérifiés de façon fiable. Pensez à relancer le scan dessus :")
+        print("[FIN] " + ", ".join(str(i) for i in ids_echec))
     print("=" * 60)

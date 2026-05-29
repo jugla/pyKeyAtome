@@ -85,7 +85,8 @@ last_login_time = 0
 # Statistics
 checked_count = 0
 found_count = 0
-error_count = 0
+exception_count = 0
+exception_ids = set()       # user IDs whose request raised a network exception
 start_time = 0
 
 # Signal to stop when a valid user ID is found
@@ -153,7 +154,7 @@ def shutdown_with_hit(user_id, response_text):
     print("-" * 60)
     with stats_lock:
         print(f"[DONE] Checked        : {checked_count}")
-        print(f"[DONE] Errors         : {error_count}")
+        print(f"[DONE] Exceptions     : {exception_count}")
     print(f"[DONE] Time to find   : {int(elapsed//60)}m{int(elapsed%60)}s")
     print("=" * 60)
 
@@ -167,7 +168,7 @@ def shutdown_with_hit(user_id, response_text):
 # CHECK A USER ID
 # ------------------------------------------------------------
 def check_user(user_id):
-    global checked_count, found_count, error_count
+    global checked_count, found_count, exception_count
 
     # If a valid ID has already been found by another thread,
     # we no longer perform any requests.
@@ -211,8 +212,13 @@ def check_user(user_id):
                     shutdown_with_hit(user_str, r.text)
 
         except requests.RequestException:
+            # A network exception still counts as "checked": we tried this id
+            # but got no response, so we move on. It is NOT a reliable "not the
+            # one", so we record the id to report it at the end of the scan.
             with stats_lock:
-                error_count += 1
+                checked_count += 1
+                exception_count += 1
+                exception_ids.add(user_id)
 
     time.sleep(0.01)
 
@@ -229,6 +235,7 @@ def progress_reporter(total_users):
 
         with stats_lock:
             current_checked = checked_count
+            current_exceptions = exception_count
 
         now = time.time()
         elapsed = now - start_time
@@ -249,6 +256,7 @@ def progress_reporter(total_users):
         print(
             f"[STATS] checked={current_checked} "
             f"({progress_pct:.2f}%) | "
+            f"exceptions={current_exceptions} | "
             f"rate={rate_recent:.1f}/s (avg {rate_total:.1f}/s) | "
             f"elapsed={int(elapsed//60)}m{int(elapsed%60)}s | "
             f"ETA={eta_h}h{eta_m:02d}m"
@@ -291,6 +299,8 @@ reporter_thread = threading.Thread(
 reporter_thread.start()
 
 submitted = 0
+batch_start = SEARCH_START      # first id of the current (not yet logged) batch
+last_id = SEARCH_START          # last id actually submitted
 with ThreadPoolExecutor(max_workers=THREADS) as executor:
     for user_id in range(SEARCH_START, SEARCH_END):
         # If a hit has been found in the meantime, we stop feeding
@@ -302,9 +312,15 @@ with ThreadPoolExecutor(max_workers=THREADS) as executor:
 
         executor.submit(check_user, user_id)
         submitted += 1
+        last_id = user_id
 
         if submitted % 10000 == 0:
-            print(f"[QUEUE] {submitted}/{total_users} user IDs submitted to the pool")
+            print(f"[QUEUE] user IDs {batch_start} to {user_id} submitted to the pool ({submitted}/{total_users})")
+            batch_start = user_id + 1
+
+    # Show the final partial batch (when the range end is not a multiple of 10000)
+    if batch_start <= last_id:
+        print(f"[QUEUE] user IDs {batch_start} to {last_id} submitted to the pool ({submitted}/{total_users})")
 
 print("=" * 60)
 print("[+] All tasks submitted. Waiting for workers to finish...")
@@ -316,7 +332,13 @@ elapsed_total = time.time() - start_time
 with stats_lock:
     print("=" * 60)
     print("[DONE] Scan finished - NO HIT FOUND on the full range.")
-    print(f"[DONE] Total checked : {checked_count}")
-    print(f"[DONE] Total errors  : {error_count}")
-    print(f"[DONE] Total time    : {int(elapsed_total//3600)}h{int((elapsed_total%3600)//60)}m{int(elapsed_total%60)}s")
+    print(f"[DONE] Total checked    : {checked_count}")
+    print(f"[DONE] Total exceptions : {exception_count}")
+    print(f"[DONE] Total time       : {int(elapsed_total//3600)}h{int((elapsed_total%3600)//60)}m{int(elapsed_total%60)}s")
+    if exception_ids:
+        failed_ids = sorted(exception_ids)
+        print("-" * 60)
+        print(f"[DONE] {len(failed_ids)} user ID(s) raised a network exception and were")
+        print("[DONE] NOT reliably checked. Consider re-scanning these IDs:")
+        print("[DONE] " + ", ".join(str(i) for i in failed_ids))
     print("=" * 60)
